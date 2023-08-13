@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>学生课堂行为识别系统</title>
+    <link rel="stylesheet" href="../static/plugins/bootstrap-3.4.1/css/bootstrap.css">
+    <style>
+        .navbar {
+            border-radius: 0;
+        }
+        .navbar-brand {
+          font-family: "Arial", sans-serif;
+          font-size: 20px;
+          font-weight: bold;
+        }
+        .navbar {
+          background-color: #00a5b5;
+        }
+
+        .navbar-brand,
+        .navbar-nav li a {
+          color: #ffffff;
+        }
+
+        .navbar-nav li a:hover {
+          color: #00a5b5;
+          font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-primary" style="z-index: 10;">
+    <div class="container">
+        <!-- Header -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#topNavBar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand text-dark" href="/index/">学生课堂行为识别系统</a>
+        </div>
+
+        <!-- Items -->
+        <div class="collapse navbar-collapse" id="topNavBar">
+            <ul class="nav navbar-nav">
+                <li class="active" style="color: #ffffff"><a class="text-dark" href="/head/">首页</a></li>
+                <li id="navigation_activity_active_id"><a class="text-dark" href="/shibie/">行为识别</a></li>
+                <li><a class="text-dark" href="/baogao/">行为报告</a></li>
+                <li id="navigation_competition_active_id"><a class="text-dark" href="/help/">帮助</a></li>
+                <li><a class="text-dark" href="/settings/">设置</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+
+                    <a class="text-dark" href="/logout">退出登录</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+ <h1>视频上传和处理</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="videoFile" id="videoFileInput">
+    <button type="button" onclick="uploadVideo()">上传视频</button>
+  </form>
+
+  <video id="outputVideo" controls></video>
+
+
+
+<script src="../static/js/jquery-3.7.0.min.js"></script>
+<script src="../static/plugins/bootstrap-3.4.1/js/bootstrap.js"></script>
+ <script>
+    function uploadVideo() {
+      var fileInput = document.getElementById("videoFileInput");
+      var file = fileInput.files[0];
+
+      var formData = new FormData();
+      formData.append("videoFile", file);
+
+      var request = new XMLHttpRequest();
+      request.open("POST", "/process-video"); // 替换为你的后端URL
+      request.onreadystatechange = function() {
+        if (request.readyState === 4 && request.status === 200) {
+          var response = JSON.parse(request.responseText);
+          var videoData = response.videoData;
+
+          var outputVideo = document.getElementById("outputVideo");
+          outputVideo.src = URL.createObjectURL(videoData);
+        }
+      };
+      request.send(formData);
+    }
+  </script>
+</body>
+</html>
